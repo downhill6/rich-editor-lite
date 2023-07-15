@@ -1,7 +1,7 @@
 import {useCallback, useEffect, useRef} from 'react';
 import RichTextLite, {toggleBlock, toggleMark} from './editor';
 import type {Descendant} from 'slate';
-import type {CustomEditor, CustomMasks} from './editor';
+import type {CustomEditor, CustomMasks} from './editor/type';
 import {Editor} from 'slate';
 import './App.css';
 
