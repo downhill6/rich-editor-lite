@@ -10,6 +10,13 @@ html,body {
 
 [contenteditable=true] {
   outline: none;
-  padding: 0 1vw;
+  padding: 1vw;
   height: 100%;
+  background-color: #e7e5e4;
+  overflow: auto;
+}
+
+[contenteditable=true] * {
+  margin-block-start: 0;
+  margin-block-end: 0;
 }

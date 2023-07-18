@@ -25,7 +25,6 @@ type Command = {
     | 'redo'
     | 'undo';
   value?: string;
-  callback?: (value: string) => void;
 };
 
 function dispatch(command: Command) {
@@ -45,14 +44,26 @@ function App() {
     valueRef.current = value;
   }, []);
 
-  const save = (callback: Command['callback']) => {
-    if (callback) {
-      try {
-        callback(JSON.stringify(valueRef.current));
-      } catch (e) {
-        callback('json error');
-        console.error(e);
+  const save = () => {
+    try {
+      // @ts-ignore
+      if (window.ReactNativeWebView) {
+        // @ts-ignore
+        window.ReactNativeWebView.postMessage(JSON.stringify({
+          type: 'save',
+          value: valueRef.current,
+        }));
       }
+    } catch (e) {
+      // @ts-ignore
+      if (window.ReactNativeWebView) {
+        // @ts-ignore
+        window.ReactNativeWebView.postMessage(JSON.stringify({
+          type: 'error',
+          value: 'json error',
+        }));
+      }
+      console.error(e);
     }
   };
 
@@ -78,10 +89,10 @@ function App() {
   useEffect(() => {
     // 监听外部事件
     const listener = (e: any) => {
-      const {tag, value, callback} = e.detail as Command;
+      const {tag, value} = e.detail as Command;
       switch (tag) {
         case 'save':
-          save(callback);
+          save();
           break;
         case 'insert':
           insert(value);
